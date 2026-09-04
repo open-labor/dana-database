@@ -8,6 +8,8 @@ dana 索引自动生成工具
   --target <FILE>    仅更新指定 MOC 文件
   --all              更新所有 MOC 索引文件
   --section <NAME>   仅更新指定板块（人物志/心法/路径/方法论/案例/资源）
+  --sync-docs        用真实文件数同步 docs/index.md 的统计卡片数字
+  --dry-run          与 --sync-docs 连用，仅预览不写入
 
 设计原则：
   - 保留 MOC 现有手工前言与说明文字
@@ -203,6 +205,79 @@ def scan_mode():
     print(f'\n📊 总计将索引 {total} 条内容到 MOC 文件')
 
 
+# ============ docs/index.md 统计数字同步 ============
+
+DOCS_INDEX = ROOT / 'docs' / 'index.md'
+
+# docs/index.md 的 stat-label → (计数范围, 数字格式化)
+STAT_RULES = [
+    ('技术大拿档案', ('人物志',), lambda n: f'{n}+'),
+    ('核心心法', ('心法与原则',), lambda n: str(n)),
+    ('方法论框架', ('方法论与框架',), lambda n: str(n)),
+    ('富豪榜档案', ('WEALTH',), lambda n: f'{n}+'),
+    ('研究复盘案例', ('案例研究',), lambda n: str(n)),
+]
+
+
+def compute_section_counts():
+    """从真实文件计算各板块数量（富豪榜仅计人物档案）"""
+    from audit import is_wealth_person_file
+    md_files = find_md_files()
+    counts = defaultdict(int)
+    for rel in md_files:
+        if not rel.parts:
+            continue
+        counts[rel.parts[0]] += 1
+        if rel.name == 'README.md':
+            counts[rel.parts[0]] -= 1  # 板块内 README 不计为内容
+        if is_wealth_person_file(rel):
+            counts['WEALTH'] += 1
+    return counts
+
+
+def sync_docs_stats(dry_run=False):
+    """用真实文件数同步 docs/index.md 的统计卡片数字"""
+    if not DOCS_INDEX.exists():
+        print(f'⚠️  目标文件不存在: {DOCS_INDEX}')
+        return
+
+    content = DOCS_INDEX.read_text(encoding='utf-8')
+    counts = compute_section_counts()
+    changed = 0
+
+    print('=' * 60)
+    print('🔄 同步 docs/index.md 统计数字')
+    print('=' * 60)
+
+    for label, scope, fmt in STAT_RULES:
+        if scope[0] == 'WEALTH':
+            n = counts.get('WEALTH', 0)
+        else:
+            n = counts.get(scope[0], 0)
+        new_num = fmt(n)
+        pattern = re.compile(
+            rf'(<span class="stat-number">)[^<]*(</span>\s*<span class="stat-label">{re.escape(label)})'
+        )
+        m = pattern.search(content)
+        old_num = m.group(0).split('>')[1].split('<')[0] if m else '?'
+        if m and old_num != new_num:
+            content = pattern.sub(rf'\g<1>{new_num}\g<2>', content, count=1)
+            print(f'   {label}: {old_num} → {new_num}')
+            changed += 1
+        else:
+            print(f'   {label}: {new_num}（已是最新）')
+
+    if changed == 0:
+        print('\n✅ docs/index.md 数字均已最新，无需修改')
+        return
+
+    if dry_run:
+        print(f'\n📋 [预览] 将修改 {changed} 处（未写入）')
+    else:
+        DOCS_INDEX.write_text(content, encoding='utf-8')
+        print(f'\n✅ 已更新 docs/index.md（{changed} 处）')
+
+
 def main():
     args = sys.argv[1:]
     if not args or '--help' in args or '-h' in args:
@@ -211,6 +286,10 @@ def main():
 
     if '--scan' in args:
         scan_mode()
+        return
+
+    if '--sync-docs' in args:
+        sync_docs_stats(dry_run='--dry-run' in args)
         return
 
     target_filter = None

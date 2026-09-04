@@ -9,7 +9,7 @@ tags:
 aliases:
   - Lisa Su
   - 苏姿丰
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Jensen Huang]]
   - [[Pat Gelsinger]]

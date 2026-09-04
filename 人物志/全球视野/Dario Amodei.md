@@ -7,7 +7,7 @@ tags:
   - 影响力/对齐
 aliases:
   - Dario Amodei
-date: 2026-06
+date: 2026-06-01
 related:
   - [[Ilya Sutskever]]
   - [[Sam Altman]]

@@ -9,7 +9,7 @@ aliases:
   - Jensen Huang
   - 黄仁勋
 summary_en: "Jensen Huang (黄仁勋) co-founded NVIDIA in 1993 and has led it for 30+ years — transforming a gaming-GPU company into the dominant AI infrastructure provider (market cap peaked at $3T+ in 2024). The 20-year CUDA bet (started 2006) made NVIDIA the 'oil' of the AI era. Management style: 40+ direct reports (no middle management), 'intellectual honesty' culture, signature leather jacket. Key lessons: 10-20 year platform bets on paradigm shifts, hardware + software + ecosystem as one system, first-principles engineering over trend-chasing."
-date: 2026-06（本轮 1 2 3 同步）
+date: 2026-06-01
 related:
   - [[如何成为技术超级个体]]
   - [[李开复]]

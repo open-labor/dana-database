@@ -7,7 +7,7 @@ tags:
   - 影响力/产品
 aliases:
   - Mustafa Suleyman
-date: 2026-06（从框架升级为完整高质量）
+date: 2026-06-01
 related:
   - [[Demis Hassabis]]
   - [[如何成为技术超级个体]]

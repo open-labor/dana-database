@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 工具运行产物
+.mimosa/
+
+# macOS
+.DS_Store
+
+# 编辑器
+.idea/
+.vscode/

@@ -11,6 +11,7 @@ aliases:
   - 爱丽丝·沃尔顿
   - James Carr Walton
   - Alice Louise Walton
+  - Alice Walton
 born: 1948/1949
 nationality: 美国
 industry: 零售/金融/艺术

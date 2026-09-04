@@ -7,7 +7,7 @@ tags:
   - 影响力/组织
 aliases:
   - Sam Altman
-date: 2026-06（本轮深化）
+date: 2026-06-01
 related:
   - [[如何成为技术超级个体]]
   - [[Demis Hassabis]]

@@ -8,7 +8,7 @@ tags:
 aliases:
   - Charlie Munger
   - 查理·芒格
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Warren Buffett]]
   - [[第二层思维：超越显而易见的后果]]

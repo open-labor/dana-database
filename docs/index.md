@@ -18,23 +18,23 @@ title: 首页
 
 <div class="stats-row">
   <div class="stat-card">
-    <span class="stat-number">68+</span>
+    <span class="stat-number">117+</span>
     <span class="stat-label">技术大拿档案</span>
   </div>
   <div class="stat-card">
-    <span class="stat-number">11</span>
+    <span class="stat-number">22</span>
     <span class="stat-label">核心心法</span>
   </div>
   <div class="stat-card">
-    <span class="stat-number">6</span>
+    <span class="stat-number">13</span>
     <span class="stat-label">方法论框架</span>
   </div>
   <div class="stat-card">
-    <span class="stat-number">70+</span>
+    <span class="stat-number">83+</span>
     <span class="stat-label">富豪榜档案</span>
   </div>
   <div class="stat-card">
-    <span class="stat-number">16</span>
+    <span class="stat-number">13</span>
     <span class="stat-label">研究复盘案例</span>
   </div>
 </div>

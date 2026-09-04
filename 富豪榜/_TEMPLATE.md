@@ -2,24 +2,24 @@
 title: "{{name_cn}}（{{name_en}}）：{{one_line_summary}}"
 tags:
   - 人物/富豪榜
-  - 富豪榜/{{list_source}}   # 福布斯 / 胡润 / 双榜
-  - 行业/{{industry}}        # 科技/零售/金融/地产/能源/消费品/传媒/医药/制造/综合
-  - 地区/{{region}}          # 美国/中国/欧洲/印度/中东/东南亚/拉美/其他
+  - "富豪榜/{{list_source}}"   # 福布斯 / 胡润 / 双榜
+  - "行业/{{industry}}"        # 科技/零售/金融/地产/能源/消费品/传媒/医药/制造/综合
+  - "地区/{{region}}"          # 美国/中国/欧洲/印度/中东/东南亚/拉美/其他
 aliases:
-  - {{alias1}}
-  - {{alias2}}
-born: {{birth_year}}
-nationality: {{nationality}}
-industry: {{industry}}
-company: {{main_company}}
-peak_rank: {{peak_rank}}       # 历史最高排名
-peak_net_worth: {{peak_nw}}    # 峰值净资产（美元）
-first_appeared: {{first_year}} # 首次上榜年份
-date: {{date}}
+  - "{{alias1}}"
+  - "{{alias2}}"
+born: "{{birth_year}}"
+nationality: "{{nationality}}"
+industry: "{{industry}}"
+company: "{{main_company}}"
+peak_rank: "{{peak_rank}}"       # 历史最高排名
+peak_net_worth: "{{peak_nw}}"    # 峰值净资产（美元）
+first_appeared: "{{first_year}}" # 首次上榜年份
+date: "{{date}}"
 related:
   - [[富豪榜主索引]]
-  - [[{{industry}}行业富豪共性]]
-  - [[{{related_person_1}}]]
+  - "[[{{industry}}行业富豪共性]]"
+  - "[[{{related_person_1}}]]"
 ---
 
 # {{name_cn}}（{{name_en}}）
@@ -134,5 +134,5 @@ related:
 
 ## 相关人物
 
-- [[{{related_1}}]]：{{relationship}}
-- [[{{related_2}}]]：{{relationship}}
+- "[[{{related_1}}]]：{{relationship}}
+- "[[{{related_2}}]]：{{relationship}}

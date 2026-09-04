@@ -43,6 +43,11 @@ jobs:
           echo "⚡ 步骤 2: 重新生成 quick_start.md"
           python tools/extract_actions.py
 
+      - name: 同步 docs 首页统计数字
+        run: |
+          echo "🔄 步骤 3: 同步 docs/index.md 统计卡片"
+          python tools/index_generator.py --sync-docs
+
       - name: 检查变更
         id: check_changes
         run: |
@@ -61,15 +66,16 @@ jobs:
           git config user.name "dana-bot"
           git config user.email "bot@dana.local"
           git add 索引/quick_start.md
+          git add docs/index.md || true
           # 提交索引变更
           for f in 索引/*.md; do
             git add "$f" 2>/dev/null || true
           done
-          git commit -m "chore: 月度自动刷新 MOC 索引与 quick_start
+          git commit -m "chore: 月度自动刷新 MOC 索引、quick_start 与 docs 统计
 
           - 由 .github/workflows/monthly-refresh.yml 自动生成
           - 执行时间: $(date -u '+%Y-%m-%d %H:%M UTC')
-          - 变更范围: 索引/*.md, 索引/quick_start.md" || echo "No changes to commit"
+          - 变更范围: 索引/*.md, 索引/quick_start.md, docs/index.md" || echo "No changes to commit"
           git push
 
       - name: 创建变更报告 PR
@@ -79,10 +85,11 @@ jobs:
           git config user.email "bot@dana.local"
           git checkout -b monthly-refresh-${{ github.run_id }}
           git add 索引/quick_start.md
+          git add docs/index.md || true
           for f in 索引/*.md; do
             git add "$f" 2>/dev/null || true
           done
-          git commit -m "chore: 月度自动刷新 MOC 索引与 quick_start"
+          git commit -m "chore: 月度自动刷新 MOC 索引、quick_start 与 docs 统计"
           git push origin monthly-refresh-${{ github.run_id }}
           gh pr create \
             --title "📊 月度自动刷新：MOC 索引 + quick_start" \

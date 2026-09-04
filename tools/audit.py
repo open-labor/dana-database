@@ -29,7 +29,7 @@ from collections import defaultdict
 # 项目根目录（脚本位于 tools/，向上退一级）
 ROOT = Path(__file__).resolve().parent.parent
 # 忽略的路径
-IGNORE_DIRS = {'.git', 'tools', 'docs', '.github', '模板'}
+IGNORE_DIRS = {'.git', 'tools', 'docs', '.github', '模板', 'GTM'}
 # 忽略的根目录文件（项目级文档，非知识库内容）
 IGNORE_ROOT_FILES = {'README.md', 'CONTRIBUTING.md', '项目评估与改进报告.md', '更新日志.md'}
 
@@ -114,6 +114,9 @@ def extract_wikilinks(content):
             display_text = link_text
         # 去掉 anchor
         link_text = link_text.split('#')[0].strip()
+        # 跳过模板占位符（如 [[{{industry}}行业富豪共性]]）
+        if '{{' in link_text:
+            continue
         results.append((link_text, display_text))
     return results
 
@@ -180,6 +183,24 @@ def get_existing_pages(md_files):
         existing.add(str(rel.with_suffix('')))
 
     return existing, alias_map
+
+
+def get_all_page_targets():
+    """所有可被 [[...]] 引用的页面名（含被忽略为"源文件"的项目级文档，如 README、更新日志、评估报告）
+
+    源文件扫描范围（find_md_files）与链接目标范围是两回事：
+    一个文件可以不被审计其内容，但仍应是合法的链接目标。
+    """
+    targets = set()
+    for path in ROOT.rglob('*.md'):
+        rel = path.relative_to(ROOT)
+        targets.add(rel.stem)
+        targets.add(str(rel.with_suffix('')))
+    for canvas_path in ROOT.rglob('*.canvas'):
+        rel = canvas_path.relative_to(ROOT)
+        targets.add(rel.stem)
+        targets.add(str(rel.with_suffix('')))
+    return targets
 
 
 def check_links(md_files, existing_pages):
@@ -317,6 +338,27 @@ def check_frontmatter(md_files):
             if field in frontmatter:
                 stats['field_coverage'][field] += 1
 
+        # date 键存在但值非法时，新鲜度监控会静默失效——必须显式校验
+        # （模板文件的 {{date}} 占位符豁免）
+        date_val = frontmatter.get('date')
+        date_ok = False
+        if isinstance(date_val, str) and '{{' in date_val:
+            date_ok = True
+        elif isinstance(date_val, (datetime, date)):
+            date_ok = True
+        elif isinstance(date_val, str):
+            try:
+                date.fromisoformat(date_val)
+                date_ok = True
+            except ValueError:
+                date_ok = False
+        if date_val is not None and not date_ok:
+            issues.append({
+                'file': str(rel_path),
+                'type': 'date 值格式错误',
+                'detail': f'date={date_val!r} 不是 YYYY-MM-DD'
+            })
+
     total = len(md_files)
     print(f"\n📊 统计：")
     print(f"   含 frontmatter: {stats['with_frontmatter']} / {total}")
@@ -377,7 +419,7 @@ def check_wealth(md_files):
     REQUIRED_SECTIONS = {
         '数据表': re.compile(r'##\s+四、财富轨迹'),
         '来源': re.compile(r'##\s+参考来源'),
-        '心法': re.compile(r'##\s+七、可复用'),
+        '心法': re.compile(r'##\s+[六七]、\s*可复用'),
     }
 
     for rel_path in wealth_files:
@@ -388,7 +430,8 @@ def check_wealth(md_files):
         if rel_str.endswith('_总览.md') or rel_str.endswith('_主索引.md') or rel_str.endswith('_交叉对照索引.md'):
             stats['总览/索引'] += 1
             continue
-        if '/综合分析/' in rel_str:
+        # 群像/多人物对比文件本质是综合分析，不适用个人档案章节模板
+        if '群像' in rel_path.name or '/综合分析/' in rel_str:
             stats['综合分析'] += 1
             continue
 
@@ -466,12 +509,23 @@ def check_freshness(md_files):
     stale = []
     fresh = []
     no_date = []
+    parse_errors = []
+    no_frontmatter = []
 
     for rel_path in md_files:
+        # 下划线前缀文件是索引/模板/数据等元文件，不参与内容新鲜度
+        if rel_path.name.startswith('_'):
+            continue
         full_path = ROOT / rel_path
         content = full_path.read_text(encoding='utf-8')
+        if not content.startswith('---'):
+            no_frontmatter.append(str(rel_path))
+            continue
         fm = parse_frontmatter(content)
-        if not fm or 'date' not in fm:
+        if fm is None:
+            parse_errors.append(str(rel_path))
+            continue
+        if 'date' not in fm:
             no_date.append(str(rel_path))
             continue
 
@@ -504,6 +558,12 @@ def check_freshness(md_files):
     print(f"   阈值: {FRESHNESS_THRESHOLD_DAYS} 天")
     print(f"   新鲜: {len(fresh)} 篇")
     print(f"   陈旧: {len(stale)} 篇")
+    if parse_errors:
+        print(f"   ⚠️ frontmatter 解析失败: {len(parse_errors)} 篇（单独修复，不计入无 date）")
+        for p in parse_errors:
+            print(f"      → {p}")
+    if no_frontmatter:
+        print(f"   无 frontmatter: {len(no_frontmatter)} 篇")
     if no_date:
         print(f"   无 date 字段: {len(no_date)} 篇")
 
@@ -589,6 +649,8 @@ def main():
 
     md_files = find_md_files()
     existing_pages, alias_map = get_existing_pages(md_files)
+    # 链接目标集合 = 被扫描文件 + 所有存在的 md/canvas（含项目级文档）
+    link_targets = existing_pages | get_all_page_targets()
 
     print(f"🚀 dana 知识库审计工具")
     print(f"   项目根目录: {ROOT}")
@@ -598,7 +660,7 @@ def main():
         print_stats(md_files)
 
     if check_links_flag:
-        check_links(md_files, existing_pages)
+        check_links(md_files, link_targets)
 
     if check_frontmatter_flag:
         check_frontmatter(md_files)

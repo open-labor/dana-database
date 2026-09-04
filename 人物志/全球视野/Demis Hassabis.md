@@ -7,7 +7,7 @@ tags:
   - 影响力/产品
 aliases:
   - Demis Hassabis
-date: 2026-06（本轮 1 2 3 同步）
+date: 2026-06-01
 related:
   - [[如何成为技术超级个体]]
   - [[Geoffrey Hinton]]

@@ -8,7 +8,7 @@ tags:
 aliases:
   - Sam Bankman-Fried
   - SBF
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Brian Armstrong]]
   - [[Changpeng Zhao]]

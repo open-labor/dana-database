@@ -7,7 +7,7 @@ tags:
   - 影响力/对齐
 aliases:
   - Ilya Sutskever
-date: 2026-06（本轮深化）
+date: 2026-06-01
 related:
   - [[Geoffrey Hinton]]
   - [[Demis Hassabis]]

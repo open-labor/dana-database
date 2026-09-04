@@ -9,7 +9,7 @@ tags:
 aliases:
   - Brian Armstrong
   - 布莱恩·阿姆斯特朗
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Sam Bankman-Fried]]
   - [[Changpeng Zhao]]

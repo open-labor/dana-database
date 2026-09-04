@@ -9,7 +9,7 @@ tags:
 aliases:
   - Pat Gelsinger
   - 帕特·基辛格
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Jensen Huang]]
   - [[Lisa Su]]

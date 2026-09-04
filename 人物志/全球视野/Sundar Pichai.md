@@ -9,7 +9,7 @@ tags:
 aliases:
   - Sundar Pichai
   - 桑达尔·皮查伊
-date: 2026-07-26（首次建档）
+date: 2026-07-26
 related:
   - [[Larry Page]]
   - [[Sergey Brin]]
