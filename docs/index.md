@@ -30,7 +30,7 @@ title: 首页
     <span class="stat-label">方法论框架</span>
   </div>
   <div class="stat-card">
-    <span class="stat-number">83+</span>
+    <span class="stat-number">84+</span>
     <span class="stat-label">富豪榜档案</span>
   </div>
   <div class="stat-card">
